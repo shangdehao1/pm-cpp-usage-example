@@ -23,7 +23,7 @@
 namespace
 {
 
-/* available queue operations */
+// available queue operations 
 enum queue_op {
     UNKNOWN_QUEUE_OP,
     QUEUE_PUSH,
@@ -33,21 +33,21 @@ enum queue_op {
     MAX_QUEUE_OP,
 };
 
-/* queue operations strings */
+// queue operations strings 
 const char *ops_str[MAX_QUEUE_OP] = {"", "push", "pop", "show"};
 
-/*
- * parse_queue_op -- parses the operation string and returns matching queue_op
- */
+// parse_queue_op -- parses the operation string and returns matching queue_op
 queue_op parse_queue_op(const char *str)
 {
     for (int i = 0; i < MAX_QUEUE_OP; ++i) {
-        if (strcmp(str, ops_str[i]) == 0)
+        if (strcmp(str, ops_str[i]) == 0) {
             return (queue_op)i;
+        }
     }
 
     return UNKNOWN_QUEUE_OP;
 }
+
 }
 
 using pmem::obj::delete_persistent;
@@ -132,7 +132,7 @@ private:
     persistent_ptr<pmem_entry> tail;
 };
 
-} /* namespace examples */
+} // namespace examples
 
 int main(int argc, char *argv[])
 {
@@ -149,13 +149,13 @@ int main(int argc, char *argv[])
     pool<examples::pmem_queue> pop;
 
     if (file_exists(path) != 0) {
-        pop = pool<examples::pmem_queue>::create(
-                path, LAYOUT, PMEMOBJ_MIN_POOL, CREATE_MODE_RW);
+        pop = pool<examples::pmem_queue>::create(path, LAYOUT, PMEMOBJ_MIN_POOL, CREATE_MODE_RW);
     } else {
         pop = pool<examples::pmem_queue>::open(path, LAYOUT);
     }
 
     auto q = pop.get_root();
+
     switch (op) {
         case QUEUE_PUSH:
             q->push(pop, std::stoull(argv[3]));
