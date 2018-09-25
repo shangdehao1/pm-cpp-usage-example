@@ -28,6 +28,8 @@ enum class array_op {
     MAX_ARRAY_OP
 };
 
+// the size of every file must be sured at the front of creating it. 
+// later, the usage of space of this file need to be controlled by develop.
 const int POOLSIZE = 1024 * 1024 * 64;
 const int MAX_BUFFLEN = 30;
 const std::string LAYOUT = "";
