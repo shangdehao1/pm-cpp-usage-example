@@ -18,5 +18,4 @@ static inline int find_last_set_64(uint64_t val)
     return 64 - __builtin_clzll(val) - 1;
 }
 
-#endif
 #endif 

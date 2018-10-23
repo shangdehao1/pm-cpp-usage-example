@@ -1,36 +1,4 @@
 /*
- * Copyright 2016-2018, Intel Corporation
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in
- *       the documentation and/or other materials provided with the
- *       distribution.
- *
- *     * Neither the name of the copyright holder nor the names of its
- *       contributors may be used to endorse or promote products derived
- *       from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-/*
  * pman.cpp -- example usage of libpmemobj C++ bindings
  */
 
@@ -87,62 +55,62 @@ namespace examples
 {
 
 enum position {
-	UP_LEFT,
-	UP_RIGHT,
-	DOWN_LEFT,
-	DOWN_RIGHT,
-	POS_MIDDLE,
-	POS_MAX,
+    UP_LEFT,
+    UP_RIGHT,
+    DOWN_LEFT,
+    DOWN_RIGHT,
+    POS_MIDDLE,
+    POS_MAX,
 };
 
 enum direction {
-	DOWN,
-	RIGHT,
-	UP,
-	LEFT,
-	STOP,
+    DOWN,
+    RIGHT,
+    UP,
+    LEFT,
+    STOP,
 };
 
 enum field {
-	FREE,
-	FOOD,
-	WALL,
-	PLAYER,
-	ALIEN,
-	EXPLOSION,
-	BONUS,
-	LIFE,
-	BOMB,
+    FREE,
+    FOOD,
+    WALL,
+    PLAYER,
+    ALIEN,
+    EXPLOSION,
+    BONUS,
+    LIFE,
+    BOMB,
 };
 
 class point {
 public:
-	point() = default;
-	point(int xf, int yf);
-	point(position cor);
-	void move_back();
-	void move_home();
-	/* x component of object's position */
-	p<int> x;
-	/* y component of object's position */
-	p<int> y;
-	/* x component of object's  previous position */
-	p<int> prev_x;
-	/* y component of object's  previous position */
-	p<int> prev_y;
-	/* type of field of object */
-	p<field> cur_field;
-	/* type of field where object stood before */
-	p<field> prev_field;
+    point() = default;
+    point(int xf, int yf);
+    point(position cor);
+    void move_back();
+    void move_home();
+    // x component of object's position 
+    p<int> x;
+    // y component of object's position 
+    p<int> y;
+    // x component of object's  previous position 
+    p<int> prev_x;
+    // y component of object's  previous position 
+    p<int> prev_y;
+    // type of field of object 
+    p<field> cur_field;
+    // type of field where object stood before 
+    p<field> prev_field;
 
 protected:
-	void move();
-	/* direction in which object is moving */
-	p<direction> dir;
+    void move();
+    // direction in which object is moving 
+    p<direction> dir;
 
 private:
-	/* starting position of the object */
-	p<position> home;
+    // starting position of the object 
+    p<position> home;
 };
 
 class bomb : public point {
@@ -1163,80 +1131,77 @@ state::reset_bombs()
 /*
  * state::is_collision -- check if there is collision between given objects
  */
-bool
-state::is_collision(persistent_ptr<point> p1, persistent_ptr<point> p2)
+bool state::is_collision(persistent_ptr<point> p1, persistent_ptr<point> p2)
 {
-	if (p1->x == p2->x && p1->y == p2->y)
-		return true;
-	else if (p1->prev_x == p2->x && p1->prev_y == p2->y &&
-		 p1->x == p2->prev_x && p1->y == p2->prev_y)
-		return true;
-	return false;
+    if (p1->x == p2->x && p1->y == p2->y) {
+        return true;
+    } else if (p1->prev_x == p2->x && p1->prev_y == p2->y 
+             && p1->x == p2->prev_x && p1->y == p2->prev_y) {
+        return true;
+    }
+    return false;
 }
 
 } /* namespace examples */
 
-namespace
-{
+namespace {
 
-void
-print_usage(const std::string &binary)
+void print_usage(const std::string &binary)
 {
-	std::cout << "Usage:\n" << binary << " <game_file> [map_file]\n";
+    std::cout << "Usage:\n" << binary << " <game_file> [map_file]\n";
 }
 }
 
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-	if (argc < 2 || argc > 3) {
-		print_usage(argv[0]);
-		return 1;
-	}
+    if (argc < 2 || argc > 3) {
+        print_usage(argv[0]);
+        return 1;
+    }
 
-	std::string name = argv[1];
-	std::string map_path = "map";
+    std::string name = argv[1];
+    std::string map_path = "map";
 
-	if (argc == 3)
-		map_path = argv[2];
+    if (argc == 3) {
+        map_path = argv[2];
+    }
 
-	int ret = -1;
-	try {
-		if (pool<examples::state>::check(name, LAYOUT_NAME) == 1)
-			pop = pool<examples::state>::open(name, LAYOUT_NAME);
-		else
-			pop = pool<examples::state>::create(
-				name, LAYOUT_NAME, PMEMOBJ_MIN_POOL * 2);
+    int ret = -1;
+    try {
+        if (pool<examples::state>::check(name, LAYOUT_NAME) == 1)
+            pop = pool<examples::state>::open(name, LAYOUT_NAME);
+        else
+            pop = pool<examples::state>::create(name, LAYOUT_NAME, PMEMOBJ_MIN_POOL * 2);
 
-		initscr();
-		start_color();
-		init_pair(examples::FOOD, COLOR_YELLOW, COLOR_BLACK);
-		init_pair(examples::WALL, COLOR_WHITE, COLOR_BLACK);
-		init_pair(examples::PLAYER, COLOR_CYAN, COLOR_BLACK);
-		init_pair(examples::ALIEN, COLOR_RED, COLOR_BLACK);
-		init_pair(examples::EXPLOSION, COLOR_CYAN, COLOR_BLACK);
-		init_pair(examples::BONUS, COLOR_YELLOW, COLOR_BLACK);
-		init_pair(examples::LIFE, COLOR_MAGENTA, COLOR_BLACK);
-		nodelay(stdscr, true);
-		curs_set(0);
-		keypad(stdscr, true);
-		persistent_ptr<examples::state> r = pop.get_root();
+        initscr();
+        start_color();
+        init_pair(examples::FOOD, COLOR_YELLOW, COLOR_BLACK);
+        init_pair(examples::WALL, COLOR_WHITE, COLOR_BLACK);
+        init_pair(examples::PLAYER, COLOR_CYAN, COLOR_BLACK);
+        init_pair(examples::ALIEN, COLOR_RED, COLOR_BLACK);
+        init_pair(examples::EXPLOSION, COLOR_CYAN, COLOR_BLACK);
+        init_pair(examples::BONUS, COLOR_YELLOW, COLOR_BLACK);
+        init_pair(examples::LIFE, COLOR_MAGENTA, COLOR_BLACK);
+        nodelay(stdscr, true);
+        curs_set(0);
+        keypad(stdscr, true);
+        persistent_ptr<examples::state> r = pop.get_root();
+        
+        if ((r != nullptr) && (r->init(map_path) != false))
+            r->game();
 
-		if ((r != nullptr) && (r->init(map_path) != false))
-			r->game();
-
-		endwin();
-		pop.close();
-		ret = 0;
-	} catch (pmem::transaction_error &err) {
-		std::cerr << err.what() << std::endl;
-	} catch (pmem::transaction_scope_error &tse) {
-		std::cerr << tse.what() << std::endl;
-	} catch (pmem::pool_error &pe) {
-		std::cerr << pe.what() << std::endl;
-	} catch (std::logic_error &le) {
-		std::cerr << le.what() << std::endl;
-	}
+        endwin();
+        pop.close();
+        ret = 0;
+    } catch (pmem::transaction_error &err) {
+        std::cerr << err.what() << std::endl;
+    } catch (pmem::transaction_scope_error &tse) {
+        std::cerr << tse.what() << std::endl;
+    } catch (pmem::pool_error &pe) {
+        std::cerr << pe.what() << std::endl;
+    } catch (std::logic_error &le) {
+        std::cerr << le.what() << std::endl;
+    }
 
 	return ret;
 }
